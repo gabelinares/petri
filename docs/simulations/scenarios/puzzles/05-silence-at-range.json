@@ -1,0 +1,47 @@
+{
+  "meta": {
+    "name": "Puzzle 05 — Silence at Range",
+    "description": "SOLO PUZZLE. A Blinker oscillates far across the dish. Goal: destroy it in 1 move using a Glider launched from the opposite corner. Teaches that named Conway tools combine: a glider (spaceship, known behavior) destroys a blinker (oscillator, known behavior) from across the map. Feels like a long-range strike — the ultimate demonstration of 'deploy don't predict'.",
+    "palette": ["GliderSE"],
+    "rules": "Solo mode. Prompt: 'Destroy the specimen from across the dish in 1 move.' Win check: 0 live cells at end (or very little debris, < 5).",
+    "questions": [
+      "Does the 'long-range strike' feel land as a climactic puzzle?",
+      "Is the glider's trajectory clear enough that the player can aim by eye?",
+      "Are 4–5 advance presses okay, or does that feel like too much waiting?"
+    ]
+  },
+  "size": 12,
+  "advanceSteps": 4,
+  "initialBoard": [
+    "............",
+    "............",
+    "............",
+    "............",
+    "............",
+    "............",
+    "............",
+    "......XXX...",
+    "............",
+    "............",
+    "............",
+    "............"
+  ],
+  "moves": [
+    [
+      { "type": "place", "player": 2, "pattern": "GliderSE", "row": 1, "col": 1, "note": "Player launches a glider from the NW corner. It will travel ~5 diagonal cells before reaching the blinker." },
+      { "type": "advance", "note": "Glider advances." }
+    ],
+    [
+      { "type": "advance", "note": "Glider advances." }
+    ],
+    [
+      { "type": "advance", "note": "Glider advances." }
+    ],
+    [
+      { "type": "advance", "note": "Impact expected." }
+    ],
+    [
+      { "type": "advance", "note": "Debris settles." }
+    ]
+  ]
+}

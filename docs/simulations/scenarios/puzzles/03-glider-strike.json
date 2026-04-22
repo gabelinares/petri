@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "name": "Puzzle 03 — Glider Strike",
+    "description": "SOLO PUZZLE. A stable Block sits in the center of the dish. Goal: destroy it in ≤ 2 moves using a Glider. Teaches spaceship travel + deliberate collision targeting.",
+    "palette": ["GliderSE", "GliderSW", "GliderNE", "GliderNW"],
+    "rules": "Solo mode. Prompt: 'Destroy the specimen in 2 moves.' Win check: block cells (original X cells) all gone at end.",
+    "questions": [
+      "Does a glider hitting a block from NW actually destroy it?",
+      "Is 2 moves the right budget (too easy / too hard)?",
+      "Can the player aim the glider correctly with ghost preview?"
+    ]
+  },
+  "size": 10,
+  "advanceSteps": 4,
+  "initialBoard": [
+    "..........",
+    "..........",
+    "..........",
+    "..........",
+    "..........",
+    ".....XX...",
+    ".....XX...",
+    "..........",
+    "..........",
+    ".........."
+  ],
+  "moves": [
+    [
+      { "type": "place", "player": 2, "pattern": "GliderSE", "row": 1, "col": 1, "note": "Player launches a glider from NW, aimed at the block." },
+      { "type": "advance", "note": "Glider shifts 1 diagonal cell SE." }
+    ],
+    [
+      { "type": "advance", "note": "Glider keeps traveling." }
+    ],
+    [
+      { "type": "advance", "note": "Expected impact turn." }
+    ],
+    [
+      { "type": "advance", "note": "Debris settles." }
+    ]
+  ]
+}

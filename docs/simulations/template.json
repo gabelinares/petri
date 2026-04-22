@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "name": "Scenario name",
+    "description": "One-sentence description of what this scenario is testing.",
+    "palette": ["Block", "GliderSE"],
+    "rules": "Standard Conway + majority-of-parents ownership",
+    "questions": [
+      "What design question does this answer?",
+      "Another question if applicable"
+    ]
+  },
+  "size": 12,
+  "advanceSteps": 4,
+  "moves": [
+    [
+      { "type": "place", "player": 1, "pattern": "Block", "row": 5, "col": 5, "note": "P1 opening move" },
+      { "type": "place", "player": 2, "pattern": "GliderSE", "row": 0, "col": 0, "note": "P2 launches glider" },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "advance" }
+    ]
+  ]
+}

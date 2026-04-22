@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "name": "Puzzle 04 — Silence the Blinker",
+    "description": "SOLO PUZZLE. A Blinker oscillates at the center. Goal: destroy it in 1 move using a Block. Teaches that placing adjacent still lifes can kill oscillators via overcrowding.",
+    "palette": ["Block"],
+    "rules": "Solo mode. Prompt: 'Destroy the oscillator in 1 move.' Win check: 0 live cells at end.",
+    "questions": [
+      "Does a Block placed adjacent to a Blinker actually sterilize it?",
+      "Is the overcrowding cause-and-effect readable?",
+      "Does ghost preview make the correct placement obvious?"
+    ]
+  },
+  "size": 7,
+  "advanceSteps": 4,
+  "initialBoard": [
+    ".......",
+    ".......",
+    ".......",
+    "..XXX..",
+    ".......",
+    ".......",
+    "......."
+  ],
+  "moves": [
+    [
+      { "type": "place", "player": 2, "pattern": "Block", "row": 2, "col": 2, "note": "Player drops a Block overlapping the left end of the blinker. placePattern skips already-alive cells, so this adds cells above and left of the blinker." },
+      { "type": "advance", "note": "4 Conway steps to let the interaction play out." }
+    ]
+  ]
+}

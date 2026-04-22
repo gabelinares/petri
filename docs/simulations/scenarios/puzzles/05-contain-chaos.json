@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "name": "Puzzle 05 — Contain the Chaos",
+    "description": "SOLO PUZZLE. An R-pentomino sits at the center. Left alone it will explode for hundreds of generations. Goal: place Eaters to contain the explosion so final alive count ≤ 12 after the simulation runs. Teaches that named tools can tame even the most chaotic seeds.",
+    "palette": ["Eater"],
+    "rules": "Solo mode. Prompt: 'Contain the specimen. Final alive count ≤ 12 cells. 2 moves.' Win check: final count.",
+    "questions": [
+      "Is 2 eaters enough to contain an R-pent?",
+      "Does the climactic-final-puzzle framing work?",
+      "Is this too hard without trial and error?"
+    ]
+  },
+  "size": 14,
+  "advanceSteps": 4,
+  "initialBoard": [
+    "..............",
+    "..............",
+    "..............",
+    "..............",
+    "..............",
+    "..............",
+    "......XX......",
+    ".....XX.......",
+    "......X.......",
+    "..............",
+    "..............",
+    "..............",
+    "..............",
+    ".............."
+  ],
+  "moves": [
+    [
+      { "type": "place", "player": 2, "pattern": "Eater", "row": 2, "col": 2, "note": "Player places first Eater in the NW quadrant to catch outgoing debris." },
+      { "type": "advance", "note": "R-pent begins to evolve." }
+    ],
+    [
+      { "type": "place", "player": 2, "pattern": "Eater", "row": 9, "col": 9, "rotation": 2, "note": "Player places second Eater in the SE quadrant, rotated 180° to face incoming debris from the opposite side." },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "advance", "note": "Observation turn." }
+    ],
+    [
+      { "type": "advance", "note": "Observation turn." }
+    ],
+    [
+      { "type": "advance", "note": "Let everything settle." }
+    ]
+  ]
+}

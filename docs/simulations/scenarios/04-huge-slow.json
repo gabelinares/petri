@@ -1,0 +1,45 @@
+{
+  "meta": {
+    "name": "Huge slow — 20x20 mixed palette",
+    "description": "Same mixed palette on a 20x20 grid. Hypothesis: more room = longer wait for interactions. Does it feel epic or empty?",
+    "palette": ["Block", "Beehive", "Eater", "GliderSE"],
+    "rules": "Same as baseline except 20x20",
+    "questions": [
+      "Do gliders take too many turns to meet anything?",
+      "Does the dish feel sparse when most of it is empty?",
+      "Is 12 turns enough for a meaningful match on this grid?"
+    ]
+  },
+  "size": 20,
+  "advanceSteps": 4,
+  "moves": [
+    [
+      { "type": "place", "player": 1, "pattern": "Block", "row": 10, "col": 5, "note": "Central-left block" },
+      { "type": "place", "player": 2, "pattern": "GliderSE", "row": 0, "col": 0, "note": "Long-range glider from NW" },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "place", "player": 1, "pattern": "Eater", "row": 13, "col": 12, "note": "Eater positioned to catch SE-heading gliders" },
+      { "type": "place", "player": 2, "pattern": "GliderSE", "row": 0, "col": 10, "note": "Second glider from N-center" },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "place", "player": 1, "pattern": "Beehive", "row": 5, "col": 15, "note": "P1 NE territory" },
+      { "type": "place", "player": 2, "pattern": "GliderSE", "row": 6, "col": 0, "note": "Flanking glider from W" },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "place", "player": 1, "pattern": "Block", "row": 16, "col": 3, "note": "SW corner" },
+      { "type": "place", "player": 2, "pattern": "GliderSE", "row": 0, "col": 14, "note": "Fourth glider, NE corner" },
+      { "type": "advance" }
+    ],
+    [{ "type": "advance", "note": "Turn 5" }],
+    [{ "type": "advance", "note": "Turn 6 — gliders still traveling" }],
+    [{ "type": "advance", "note": "Turn 7 — first interactions expected" }],
+    [{ "type": "advance", "note": "Turn 8" }],
+    [{ "type": "advance", "note": "Turn 9" }],
+    [{ "type": "advance", "note": "Turn 10" }],
+    [{ "type": "advance", "note": "Turn 11" }],
+    [{ "type": "advance", "note": "Turn 12 — final" }]
+  ]
+}

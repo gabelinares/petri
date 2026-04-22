@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "name": "Puzzle 01 — Build a Beacon",
+    "description": "SOLO PUZZLE. Player has a Block already on the dish. Goal: create a Beacon (period-2 oscillator) in 1 move by placing a second Block diagonally adjacent to the existing one. Teaches that named Conway patterns can be built from simpler ones.",
+    "palette": ["Block"],
+    "rules": "Solo mode. Prompt: 'Build a period-2 oscillator in 1 move.' advanceSteps=1 per turn so player visibly sees the beacon flipping between its two states. Win check: final state has 6 or 8 cells in beacon configuration.",
+    "questions": [
+      "With advanceSteps=1, does the oscillation feel legible?",
+      "Is the aha moment (two blocks → beacon) discoverable via ghost preview?",
+      "Is this a satisfying 'first puzzle' or too trivial?"
+    ]
+  },
+  "size": 8,
+  "advanceSteps": 1,
+  "initialBoard": [
+    "........",
+    "........",
+    "..XX....",
+    "..XX....",
+    "........",
+    "........",
+    "........",
+    "........"
+  ],
+  "moves": [
+    [
+      { "type": "place", "player": 2, "pattern": "Block", "row": 4, "col": 4, "note": "Player places a second Block diagonally adjacent to the given one." },
+      { "type": "advance", "note": "Step 1: inner corner cells die. Beacon now in state B (6 cells)." }
+    ],
+    [
+      { "type": "advance", "note": "Step 2: state A returns (8 cells). Period-2 oscillation visible." }
+    ],
+    [
+      { "type": "advance", "note": "Step 3: back to state B." }
+    ]
+  ]
+}

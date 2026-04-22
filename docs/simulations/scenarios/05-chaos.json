@@ -1,0 +1,39 @@
+{
+  "meta": {
+    "name": "Chaos — 12x12, offense-only, advance=8",
+    "description": "Only mobile/chaotic patterns allowed. advance=8 means gliders move 2 cells per turn. Hypothesis: high-action spaceship warfare. Will it be exhilarating or unreadable?",
+    "palette": ["GliderSE", "GliderSW", "GliderNE", "GliderNW", "RPent"],
+    "rules": "Same grid as baseline but advance=8 and offense-only palette",
+    "questions": [
+      "Does advance=8 feel fast-exciting or too-fast-uncontrollable?",
+      "Are only-spaceships too unstable for strategic play?",
+      "Is the R-pentomino a useful tool or pure randomness?"
+    ]
+  },
+  "size": 12,
+  "advanceSteps": 8,
+  "moves": [
+    [
+      { "type": "place", "player": 1, "pattern": "GliderSE", "row": 0, "col": 0, "note": "P1 SE glider from NW corner" },
+      { "type": "place", "player": 2, "pattern": "GliderSW", "row": 0, "col": 9, "note": "P2 SW glider from NE corner" },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "place", "player": 1, "pattern": "GliderNE", "row": 9, "col": 0, "note": "P1 NE glider from SW corner" },
+      { "type": "place", "player": 2, "pattern": "GliderNW", "row": 9, "col": 9, "note": "P2 NW glider from SE corner" },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "place", "player": 1, "pattern": "RPent", "row": 5, "col": 1, "note": "P1 throws chaos into the mix" },
+      { "type": "advance", "note": "P2 observes, the R-pent is a wildcard" }
+    ],
+    [
+      { "type": "place", "player": 2, "pattern": "RPent", "row": 5, "col": 8, "note": "P2 fires a counter R-pent" },
+      { "type": "advance" }
+    ],
+    [{ "type": "advance", "note": "Turn 5 — full chaos" }],
+    [{ "type": "advance", "note": "Turn 6" }],
+    [{ "type": "advance", "note": "Turn 7" }],
+    [{ "type": "advance", "note": "Turn 8 — final debris" }]
+  ]
+}

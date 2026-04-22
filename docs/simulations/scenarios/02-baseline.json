@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "name": "Baseline — 12x12 mixed palette",
+    "description": "Reference scenario. 12x12 grid, mixed defensive/offensive palette, 4 Conway steps per turn. Everything else compares against this.",
+    "palette": ["Block", "Beehive", "Eater", "GliderSE"],
+    "rules": "Standard Conway + majority-of-parents ownership, advanceSteps=4",
+    "questions": [
+      "Does a balanced game feel like a proper chess-length match?",
+      "Do patterns meet and interact at a reasonable pace?",
+      "Is the final outcome decisive or close?"
+    ]
+  },
+  "size": 12,
+  "advanceSteps": 4,
+  "moves": [
+    [
+      { "type": "place", "player": 1, "pattern": "Block", "row": 6, "col": 3, "note": "P1 central-left defensive anchor" },
+      { "type": "place", "player": 2, "pattern": "GliderSE", "row": 0, "col": 0, "note": "P2 launches NW glider toward center" },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "place", "player": 1, "pattern": "Eater", "row": 8, "col": 8, "note": "P1 plants an eater — the natural glider counter" },
+      { "type": "place", "player": 2, "pattern": "GliderSE", "row": 0, "col": 6, "note": "Second glider from N-center" },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "place", "player": 1, "pattern": "Beehive", "row": 3, "col": 8, "note": "P1 territory grab in NE" },
+      { "type": "place", "player": 2, "pattern": "GliderSE", "row": 5, "col": 0, "note": "Third glider from W, flanking" },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "place", "player": 1, "pattern": "Block", "row": 9, "col": 2, "note": "P1 SW corner defense" },
+      { "type": "advance", "note": "P2 observes, no placement" }
+    ],
+    [{ "type": "advance", "note": "Turn 5 — gliders converging on defenses" }],
+    [{ "type": "advance", "note": "Turn 6 — impact zone" }],
+    [{ "type": "advance", "note": "Turn 7 — debris settles" }],
+    [{ "type": "advance", "note": "Turn 8 — final state" }]
+  ]
+}

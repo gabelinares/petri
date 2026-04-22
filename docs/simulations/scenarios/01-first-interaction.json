@@ -1,0 +1,74 @@
+{
+  "meta": {
+    "name": "First Interaction — Glider meets Block",
+    "description": "The riskiest assumption test: does a glider traveling across a medium grid meaningfully reach and interact with a block, and does the result produce a legible ownership outcome that a human player could reason about?",
+    "palette": ["Block", "GliderSE", "BlinkerH"],
+    "rules": "Standard Conway + majority-of-parents ownership, advanceSteps=4 so each turn moves a glider by exactly 1 diagonal cell",
+    "questions": [
+      "Does a glider meaningfully travel across a 12x12 in a reasonable number of turns?",
+      "When a glider hits a block, is the outcome visually legible?",
+      "Does the ownership propagation feel natural (debris colored by parent majority)?",
+      "Does this scenario feel like a game where decisions matter?"
+    ]
+  },
+  "size": 12,
+  "advanceSteps": 4,
+  "moves": [
+    [
+      {
+        "type": "place",
+        "player": 2,
+        "pattern": "GliderSE",
+        "row": 0,
+        "col": 0,
+        "note": "P2 opens aggressively — a glider launched from the NW corner heading SE. This is a long-range attack that will take several turns to reach the middle of the board."
+      },
+      {
+        "type": "place",
+        "player": 1,
+        "pattern": "Block",
+        "row": 6,
+        "col": 6,
+        "note": "P1 responds defensively, planting a block in the center where the glider is heading. A block is a still life — it will sit there until something disturbs it."
+      },
+      { "type": "advance", "note": "First time step. Glider should advance 1 diagonal cell, block should be stable." }
+    ],
+    [
+      {
+        "type": "place",
+        "player": 1,
+        "pattern": "Block",
+        "row": 7,
+        "col": 7,
+        "note": "P1 reinforces with a second block adjacent to the first, trying to build a wall. Risk: adjacent blocks may interact in weird ways rather than staying stable."
+      },
+      { "type": "advance" }
+    ],
+    [
+      {
+        "type": "place",
+        "player": 2,
+        "pattern": "GliderSE",
+        "row": 2,
+        "col": 0,
+        "note": "P2 sends a second glider from further down the left edge, also heading SE. Wants to hit the block wall from a different angle."
+      },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "advance", "note": "No placements — both players watching the gliders travel. Pure observation turn." }
+    ],
+    [
+      { "type": "advance", "note": "Glider 1 should now be close to the block wall. Impact should happen this turn or next." }
+    ],
+    [
+      { "type": "advance", "note": "Glider 1 impact expected." }
+    ],
+    [
+      { "type": "advance", "note": "Glider 2 impact expected." }
+    ],
+    [
+      { "type": "advance", "note": "Let any debris stabilize." }
+    ]
+  ]
+}

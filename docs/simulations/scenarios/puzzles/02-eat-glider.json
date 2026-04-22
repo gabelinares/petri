@@ -1,0 +1,42 @@
+{
+  "meta": {
+    "name": "Puzzle 02 — Catch the Glider",
+    "description": "SOLO PUZZLE. A Glider is traveling SE across the dish. Goal: destroy it in 1 move using the Eater. Teaches that named Conway patterns have known behaviors — the Eater is the specific tool for this job.",
+    "palette": ["Eater"],
+    "rules": "Solo mode. Prompt: 'Destroy the glider in 1 move.' Win check: 0 live cells from the glider, only eater remains stable.",
+    "questions": [
+      "Does the eater actually consume the glider at this placement?",
+      "Does the 'name the tool' moment land?",
+      "Is the geometry obvious enough via ghost preview?"
+    ]
+  },
+  "size": 10,
+  "advanceSteps": 4,
+  "initialBoard": [
+    "..........",
+    "..X.......",
+    "...X......",
+    ".XXX......",
+    "..........",
+    "..........",
+    "..........",
+    "..........",
+    "..........",
+    ".........."
+  ],
+  "moves": [
+    [
+      { "type": "place", "player": 2, "pattern": "Eater", "row": 6, "col": 6, "note": "Player places Eater in the glider's path, far enough that they don't overlap at t=0. The fishhook notch at (7,7) should catch the incoming glider." },
+      { "type": "advance", "note": "Turn 1. Glider advances 1 diagonal cell." }
+    ],
+    [
+      { "type": "advance", "note": "Turn 2 observation. Glider continues toward eater." }
+    ],
+    [
+      { "type": "advance", "note": "Expected impact." }
+    ],
+    [
+      { "type": "advance", "note": "Aftermath — let debris settle." }
+    ]
+  ]
+}

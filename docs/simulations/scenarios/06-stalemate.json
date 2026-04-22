@@ -1,0 +1,41 @@
+{
+  "meta": {
+    "name": "Stalemate — 12x12, defense-only",
+    "description": "Only still-life patterns allowed. Hypothesis: both players plant immortal territory and nothing ever dies. The math: whoever places more cells wins, which collapses to pure placement counting. Boring?",
+    "palette": ["Block", "Beehive", "Boat", "Tub"],
+    "rules": "Same as baseline but defense-only palette",
+    "questions": [
+      "Does a pure-defense game just become 'who places more cells'?",
+      "Is there ANY strategic decision when nothing moves?",
+      "Do adjacent still lifes break (as we saw in scenario 01)?"
+    ]
+  },
+  "size": 12,
+  "advanceSteps": 4,
+  "moves": [
+    [
+      { "type": "place", "player": 1, "pattern": "Block", "row": 2, "col": 2, "note": "P1 NW block" },
+      { "type": "place", "player": 2, "pattern": "Block", "row": 2, "col": 8, "note": "P2 NE block" },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "place", "player": 1, "pattern": "Beehive", "row": 5, "col": 2, "note": "P1 beehive" },
+      { "type": "place", "player": 2, "pattern": "Beehive", "row": 5, "col": 7, "note": "P2 beehive" },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "place", "player": 1, "pattern": "Boat", "row": 9, "col": 1, "note": "P1 boat in SW" },
+      { "type": "place", "player": 2, "pattern": "Boat", "row": 9, "col": 8, "note": "P2 boat in SE" },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "place", "player": 1, "pattern": "Tub", "row": 8, "col": 4, "note": "P1 tub in SC" },
+      { "type": "place", "player": 2, "pattern": "Tub", "row": 0, "col": 5, "note": "P2 tub on top edge" },
+      { "type": "advance" }
+    ],
+    [{ "type": "advance", "note": "Turn 5 — nothing should change" }],
+    [{ "type": "advance", "note": "Turn 6 — still stable?" }],
+    [{ "type": "advance", "note": "Turn 7" }],
+    [{ "type": "advance", "note": "Turn 8 — verify stalemate" }]
+  ]
+}

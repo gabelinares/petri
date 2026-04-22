@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "name": "Tiny fast — 8x8 mixed palette",
+    "description": "Same mixed palette, but on an 8x8 grid. Hypothesis: small grid = immediate chaos, gliders crash on walls within 1-2 turns, placements overlap frequently. Will it feel frantic or broken?",
+    "palette": ["Block", "Beehive", "Eater", "GliderSE"],
+    "rules": "Same as baseline except 8x8",
+    "questions": [
+      "Do gliders reach the opposite wall before the player can think?",
+      "Is there enough space to place multiple distinct patterns?",
+      "Does the game feel fun-frantic or broken-cramped?"
+    ]
+  },
+  "size": 8,
+  "advanceSteps": 4,
+  "moves": [
+    [
+      { "type": "place", "player": 1, "pattern": "Block", "row": 4, "col": 2, "note": "Central block, best defensive spot" },
+      { "type": "place", "player": 2, "pattern": "GliderSE", "row": 0, "col": 0, "note": "NW glider, will reach opposite corner fast" },
+      { "type": "advance" }
+    ],
+    [
+      { "type": "place", "player": 1, "pattern": "Eater", "row": 3, "col": 4, "note": "Eater near block" },
+      { "type": "advance", "note": "P2 observes — limited space to place more" }
+    ],
+    [
+      { "type": "place", "player": 2, "pattern": "GliderSE", "row": 0, "col": 4, "note": "Second glider from N-right" },
+      { "type": "advance" }
+    ],
+    [{ "type": "advance", "note": "Expect impact — glider vs wall/defense" }],
+    [{ "type": "advance", "note": "Debris forms" }],
+    [{ "type": "advance", "note": "Settling" }]
+  ]
+}

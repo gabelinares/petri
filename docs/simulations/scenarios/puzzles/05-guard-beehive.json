@@ -1,0 +1,41 @@
+{
+  "meta": {
+    "name": "Puzzle 05 — Guard the Beehive",
+    "description": "SOLO PUZZLE. A Beehive (stable still life) sits in the center. A Glider is incoming from the NW and will destroy it. Goal: stop the glider in 1 move so the Beehive stays intact. Teaches defensive placement + that still lifes need protection from spaceships.",
+    "palette": ["Block", "Eater"],
+    "rules": "Solo mode. Prompt: 'Keep the Beehive alive. Block the incoming glider in 1 move.' Win check: Beehive cells (X) still present at end, glider fully neutralized.",
+    "questions": [
+      "Does 'stop a threat before it arrives' read as a strategic puzzle?",
+      "Is the glider's trajectory visibly readable so the player can aim?",
+      "Does ghost preview of 'beehive still alive after advance' feel like the right tell?"
+    ]
+  },
+  "size": 12,
+  "advanceSteps": 4,
+  "initialBoard": [
+    "............",
+    "..X.........",
+    "...X........",
+    ".XXX........",
+    "............",
+    "............",
+    "......XX....",
+    ".....X..X...",
+    "......XX....",
+    "............",
+    "............",
+    "............"
+  ],
+  "moves": [
+    [
+      { "type": "place", "player": 2, "pattern": "Block", "row": 4, "col": 4, "note": "Player drops a Block in the glider's path. The glider will crash into it before reaching the beehive." },
+      { "type": "advance", "note": "Glider advances toward the block." }
+    ],
+    [
+      { "type": "advance", "note": "Expected collision." }
+    ],
+    [
+      { "type": "advance", "note": "Observe aftermath — beehive should still be intact." }
+    ]
+  ]
+}
