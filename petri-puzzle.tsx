@@ -213,7 +213,10 @@ function PuzzleApp({ onRestart }: { onRestart: () => void }) {
   const goHome = () => setScreen({ tag: "home" })
 
   if (screen.tag === "home") {
-    return <HomeScreen progress={progress} onSelect={(li, pi) => setScreen({ tag: "puzzle", li, pi })} onLab={() => setScreen({ tag: "lab" })} onRestart={onRestart} />
+    return <HomeScreen progress={progress} onSelect={(li, pi) => {
+      const neverStarted = li > 0 && LEVELS[li].puzzles.every(p => progress.completed[p.id] === undefined)
+      setScreen(neverStarted ? { tag: "level-intro", li } : { tag: "puzzle", li, pi })
+    }} onLab={() => setScreen({ tag: "lab" })} onRestart={onRestart} />
   }
   if (screen.tag === "puzzle") {
     const { li, pi } = screen
@@ -249,7 +252,7 @@ function PuzzleApp({ onRestart }: { onRestart: () => void }) {
   }
   if (screen.tag === "level-clear") {
     const { li } = screen
-    return <LevelClearScreen level={LEVELS[li]} nextLevel={LEVELS[li + 1]} onNext={() => setScreen({ tag: "level-intro", li: li + 1 })} onHome={goHome} />
+    return <LevelClearScreen level={LEVELS[li]} nextLevel={LEVELS[li + 1]} onNext={() => setScreen({ tag: "puzzle", li: li + 1, pi: 0 })} onHome={goHome} />
   }
   if (screen.tag === "level-intro") {
     const { li } = screen
@@ -354,7 +357,7 @@ function HomeScreen({ progress, onSelect, onLab, onRestart }: {
               </div>
               {unlocked && !allDone && (
                 <div style={{ marginTop: 16 }}>
-                  <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 18px", background: PETRI.ink, color: PETRI.bg, fontSize: 11, letterSpacing: "0.24em", textTransform: "uppercase", fontWeight: 700, borderRadius: 8 }}>
+                  <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "11px 18px", background: PETRI.ink, color: PETRI.bg, fontSize: 13, letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 700, borderRadius: 6 }}>
                     {completedCount > 0 ? "Continue" : "Begin"} →
                   </div>
                 </div>
@@ -473,7 +476,7 @@ function PuzzleScreen({ level, puzzle, li, pi, onSuccess, onHome, onLab }: {
           <span style={{ fontSize: 9, letterSpacing: "0.22em", color: PETRI.muted, textTransform: "uppercase" }}>{pi + 1}/{LEVELS[li].puzzles.length}</span>
         </div>
         <div style={{ fontSize: 9, letterSpacing: "0.18em", color: tries > 0 ? PETRI.ink : PETRI.border, fontFamily: MONO, textTransform: "uppercase", fontWeight: tries > 0 ? 700 : 400 }}>
-          {tries > 0 ? `#${tries}` : "—"}
+          {tries > 0 ? `#${tries}` : "·"}
         </div>
       </div>
 
@@ -503,7 +506,7 @@ function PuzzleScreen({ level, puzzle, li, pi, onSuccess, onHome, onLab }: {
           showLabels={false}
           bornCells={bornCells}
           maxWidth={300}
-          organic
+
         />
         {isFailing && (
           <div style={{
@@ -540,7 +543,7 @@ function PuzzleScreen({ level, puzzle, li, pi, onSuccess, onHome, onLab }: {
           )}
           {isFailing && (
             <div style={{ fontSize: 9, letterSpacing: "0.14em", color: PETRI.warn, textTransform: "uppercase", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-              {failReason.title} — {failReason.body}
+              {failReason.title}. {failReason.body}
             </div>
           )}
           {!isTesting && !hasTarget && cellCount > 0 && (
@@ -555,7 +558,7 @@ function PuzzleScreen({ level, puzzle, li, pi, onSuccess, onHome, onLab }: {
           <button
             onClick={handleReset}
             disabled={isTesting}
-            style={{ padding: "14px 16px", background: "transparent", border: `1.5px solid ${PETRI.border}`, color: PETRI.muted, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: MONO, cursor: isTesting ? "not-allowed" : "pointer", borderRadius: 8, fontWeight: 600 }}
+            style={{ padding: "14px 16px", background: "transparent", border: `1.5px solid ${PETRI.border}`, color: PETRI.muted, fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", fontFamily: MONO, cursor: isTesting ? "not-allowed" : "pointer", borderRadius: 6, fontWeight: 600 }}
           >
             Reset
           </button>
@@ -566,9 +569,9 @@ function PuzzleScreen({ level, puzzle, li, pi, onSuccess, onHome, onLab }: {
               flex: 1, padding: "14px 20px",
               background: isTesting ? PETRI.muted : (!canTest || isFailing) ? "#EDEBE5" : PETRI.ink,
               color: isTesting ? PETRI.bg : (!canTest || isFailing) ? PETRI.muted : PETRI.bg,
-              border: "none", fontSize: 13, letterSpacing: "0.2em", textTransform: "uppercase",
+              border: "none", fontSize: 13, letterSpacing: "0.22em", textTransform: "uppercase",
               fontWeight: 700, cursor: (!canTest || phase !== "building") ? "not-allowed" : "pointer",
-              fontFamily: MONO, borderRadius: 8, transition: "all 0.2s",
+              fontFamily: MONO, borderRadius: 6, transition: "all 0.2s",
             }}
           >
             {isTesting ? "Testing…" : !canTest && hasTarget ? `Need ${puzzle.targetCells} cells` : "▶ Test It"}
@@ -643,7 +646,7 @@ function SuccessScreen({ level, puzzle, tries, solvedGrid, onNext, onHome, onLab
 
           {/* Period badge for oscillators */}
           {period && (
-            <div style={{ marginBottom: 40, padding: "10px 20px", border: `1px solid ${level.accent}30`, borderRadius: 8, textAlign: "center" }}>
+            <div style={{ marginBottom: 40, padding: "10px 20px", border: `1px solid ${level.accent}30`, borderRadius: 6, textAlign: "center" }}>
               <div style={{ fontSize: 10, letterSpacing: "0.32em", color: level.accent, textTransform: "uppercase", fontWeight: 700, marginBottom: 3 }}>
                 Period {period}
               </div>
@@ -656,14 +659,14 @@ function SuccessScreen({ level, puzzle, tries, solvedGrid, onNext, onHome, onLab
           {/* Share button */}
           <button
             onClick={handleShare}
-            style={{ padding: "11px 26px", background: "transparent", border: `1px solid ${PETRI.border}`, color: PETRI.muted, fontSize: 10, letterSpacing: "0.26em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer", fontFamily: MONO, borderRadius: 6 }}
+            style={{ padding: "11px 26px", background: "transparent", border: `1px solid ${PETRI.border}`, color: PETRI.muted, fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", fontWeight: 600, cursor: "pointer", fontFamily: MONO, borderRadius: 6 }}
           >
             {copied ? "copied" : "share"}
           </button>
         </div>
 
         <div style={{ padding: "0 20px 28px" }}>
-          <button onClick={onNext} style={{ width: "100%", padding: "18px 24px", background: PETRI.ink, color: PETRI.bg, border: "none", fontSize: 13, letterSpacing: "0.26em", textTransform: "uppercase", fontWeight: 700, cursor: "pointer", fontFamily: MONO }}>
+          <button onClick={onNext} style={{ width: "100%", padding: "18px 24px", background: PETRI.ink, color: PETRI.bg, border: "none", fontSize: 13, letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 700, cursor: "pointer", fontFamily: MONO, borderRadius: 6 }}>
             Next Puzzle →
           </button>
         </div>
@@ -711,7 +714,7 @@ function LevelIntroScreen({ level, onStart }: { level: LevelDef; onStart: () => 
       <div className="fade-in" style={{ flex: 1, display: "flex", flexDirection: "column", padding: "0 28px" }}>
         <div className="fade-up" style={{ paddingTop: 28, paddingBottom: 18, borderBottom: `1px solid ${PETRI.border}` }}>
           <div style={{ fontSize: 9, letterSpacing: "0.38em", color: level.accent, textTransform: "uppercase", fontFamily: MONO, marginBottom: 8 }}>
-            Arc {String(level.id).padStart(2, "0")}
+            Level {String(level.id).padStart(2, "0")}
           </div>
           <div style={{ fontSize: 54, fontWeight: 700, letterSpacing: "0.04em", color: PETRI.ink, fontFamily: MONO, lineHeight: 0.92 }}>
             {level.chapter}
@@ -727,10 +730,9 @@ function LevelIntroScreen({ level, onStart }: { level: LevelDef; onStart: () => 
           <div style={{ height: "1px", background: PETRI.border, marginBottom: 18 }} />
           <button
             onClick={onStart}
-            style={{ width: "100%", padding: "17px 24px", background: PETRI.ink, color: PETRI.bg, border: "none", fontFamily: MONO, fontSize: 12, letterSpacing: "0.26em", textTransform: "uppercase", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center" }}
+            style={{ width: "100%", padding: "17px 24px", background: PETRI.ink, color: PETRI.bg, border: "none", fontFamily: MONO, fontSize: 13, letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 700, cursor: "pointer", borderRadius: 6 }}
           >
-            <span style={{ color: level.accent, fontSize: 9, letterSpacing: "0.3em" }}>START</span>
-            <span>Begin →</span>
+            Begin →
           </button>
         </div>
       </div>
@@ -780,9 +782,8 @@ function LevelClearScreen({ level, nextLevel, onNext, onHome }: {
             </div>
           </div>
           <div style={{ height: "1px", background: PETRI.border, marginBottom: 20 }} />
-          <button onClick={onNext} style={{ width: "100%", padding: "17px 24px", background: PETRI.ink, color: PETRI.bg, border: "none", fontFamily: MONO, fontSize: 12, letterSpacing: "0.26em", textTransform: "uppercase", cursor: "pointer", display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-            <span style={{ color: nextLevel.accent, fontSize: 9, letterSpacing: "0.3em" }}>BEGIN</span>
-            <span>{nextLevel.chapter} →</span>
+          <button onClick={onNext} style={{ width: "100%", padding: "17px 24px", background: PETRI.ink, color: PETRI.bg, border: "none", fontFamily: MONO, fontSize: 13, letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 700, cursor: "pointer", borderRadius: 6, marginBottom: 16 }}>
+            {nextLevel.chapter} →
           </button>
           <button onClick={onHome} style={{ width: "100%", background: "none", border: "none", color: PETRI.muted, fontSize: 9, letterSpacing: "0.2em", textTransform: "uppercase", cursor: "pointer", fontFamily: MONO, padding: "8px 0" }}>← Home</button>
         </div>
@@ -804,7 +805,7 @@ function GameClearScreen({ onHome, onLab }: { onHome: () => void; onLab: () => v
             You discovered still lifes.<br />You discovered oscillators.<br />You followed the same path.
           </p>
           <div style={{ display: "flex", flexDirection: "column", gap: 12, alignItems: "center" }}>
-            <button onClick={onLab} style={{ background: "transparent", border: `1px solid ${PETRI.bg}40`, color: PETRI.bg, padding: "16px 36px", fontFamily: MONO, fontSize: 12, letterSpacing: "0.26em", textTransform: "uppercase", cursor: "pointer" }}>
+            <button onClick={onLab} style={{ background: "transparent", border: `1px solid ${PETRI.bg}40`, color: PETRI.bg, padding: "16px 36px", fontFamily: MONO, fontSize: 13, letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 700, cursor: "pointer", borderRadius: 6 }}>
               Open the Lab →
             </button>
             <button onClick={onHome} style={{ background: "none", border: "none", color: `${PETRI.bg}35`, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", cursor: "pointer", fontFamily: MONO }}>← Back</button>
@@ -884,15 +885,15 @@ function LabScreen({ onBack }: { onBack: () => void }) {
           bottomLabel={`alive · ${String(aliveCount(grid)).padStart(3, "0")}`}
           bornCells={bornCells}
           maxWidth={340}
-          organic
+
         />
       </div>
 
       <div style={{ padding: "12px 20px 28px", borderTop: `1px solid ${PETRI.border}` }}>
         <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-          <button onClick={handleClear} style={{ padding: "15px 16px", background: "transparent", border: `1.5px solid ${PETRI.border}`, color: PETRI.muted, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: MONO, cursor: "pointer", borderRadius: 8, fontWeight: 600 }}>Clear</button>
-          <button onClick={handleStep} disabled={running} style={{ padding: "15px 16px", background: "transparent", border: `1.5px solid ${running ? PETRI.border : PETRI.border}`, color: running ? PETRI.border : PETRI.ink, fontSize: 10, letterSpacing: "0.2em", textTransform: "uppercase", fontFamily: MONO, cursor: running ? "not-allowed" : "pointer", borderRadius: 8, fontWeight: 600 }}>Step ▸</button>
-          <button onClick={() => setRunning(r => !r)} style={{ flex: 1, padding: "15px 20px", background: running ? PETRI.warn : PETRI.ink, color: PETRI.bg, border: "none", fontSize: 13, letterSpacing: "0.2em", textTransform: "uppercase", fontWeight: 700, cursor: "pointer", fontFamily: MONO, borderRadius: 8, transition: "background 0.2s" }}>
+          <button onClick={handleClear} style={{ padding: "15px 16px", background: "transparent", border: `1.5px solid ${PETRI.border}`, color: PETRI.muted, fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", fontFamily: MONO, cursor: "pointer", borderRadius: 6, fontWeight: 600 }}>Clear</button>
+          <button onClick={handleStep} disabled={running} style={{ padding: "15px 16px", background: "transparent", border: `1.5px solid ${running ? PETRI.border : PETRI.border}`, color: running ? PETRI.border : PETRI.ink, fontSize: 11, letterSpacing: "0.16em", textTransform: "uppercase", fontFamily: MONO, cursor: running ? "not-allowed" : "pointer", borderRadius: 6, fontWeight: 600 }}>Step ▸</button>
+          <button onClick={() => setRunning(r => !r)} style={{ flex: 1, padding: "15px 20px", background: running ? PETRI.warn : PETRI.ink, color: PETRI.bg, border: "none", fontSize: 13, letterSpacing: "0.22em", textTransform: "uppercase", fontWeight: 700, cursor: "pointer", fontFamily: MONO, borderRadius: 6, transition: "background 0.2s" }}>
             {running ? "⏹ Stop" : "▶ Play"}
           </button>
         </div>

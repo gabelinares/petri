@@ -269,7 +269,7 @@ export function PetriDishGrid({
                         cy={cy - cellR * 0.28}
                         r={cellR * 0.3}
                         fill="white"
-                        opacity="0.5"
+                        opacity="0.45"
                       />
                     </>
                   ) : isGhost ? (

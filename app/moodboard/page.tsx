@@ -843,6 +843,373 @@ function WabiScreen({ grid }: { grid: boolean[][] }) {
   )
 }
 
+// ─── "How many neighbors?" — Option A: Periodic Table ────────────────────────
+
+function NeighborPeriodicScreen() {
+  const PETRI_BG = "#FAFAF7", PETRI_INK = "#0A0A0A", PETRI_MUTED = "#57534E"
+  const PETRI_BORDER = "#E7E5E0", PETRI_LIFE = "#059669", PETRI_WARN = "#DC2626"
+  const PETRI_BORN = "#7C3AED"
+  const MONO = `ui-monospace, "SF Mono", monospace`
+
+  type Outcome = "starves" | "thrives" | "born-rule" | "suffocates"
+  const cells: { n: number; symbol: string; outcome: Outcome; label: string }[] = [
+    { n: 0, symbol: "Is", outcome: "starves",    label: "Isolation" },
+    { n: 1, symbol: "Ls", outcome: "starves",    label: "Lonesome" },
+    { n: 2, symbol: "Sv", outcome: "thrives",    label: "Survival" },
+    { n: 3, symbol: "Th", outcome: "thrives",    label: "Thriving" },
+    { n: 3, symbol: "Br", outcome: "born-rule",  label: "Birth" },
+    { n: 4, symbol: "Ov", outcome: "suffocates", label: "Overcrowd" },
+    { n: 5, symbol: "Sf", outcome: "suffocates", label: "Suffocate" },
+    { n: 6, symbol: "Sf", outcome: "suffocates", label: "Suffocate" },
+    { n: 7, symbol: "Sf", outcome: "suffocates", label: "Suffocate" },
+    { n: 8, symbol: "Sf", outcome: "suffocates", label: "Suffocate" },
+  ]
+
+  const color = (o: Outcome) =>
+    o === "thrives" ? PETRI_LIFE : o === "born-rule" ? PETRI_BORN : PETRI_WARN
+  const bg = (o: Outcome) =>
+    o === "thrives" ? "#05966910" : o === "born-rule" ? "#7C3AED10" : "#DC262608"
+
+  // Deduplicate for display — keep n=3 twice (survival + birth)
+  const displayCells = [
+    { n: 0, symbol: "Is", outcome: "starves" as Outcome,    label: "Isolation" },
+    { n: 1, symbol: "Ls", outcome: "starves" as Outcome,    label: "Lonesome" },
+    { n: 2, symbol: "Sv", outcome: "thrives" as Outcome,    label: "Survival" },
+    { n: 3, symbol: "Th", outcome: "thrives" as Outcome,    label: "Thriving" },
+    { n: 4, symbol: "Ov", outcome: "suffocates" as Outcome, label: "Overcrowd" },
+    { n: 5, symbol: "Sf", outcome: "suffocates" as Outcome, label: "Suffocat." },
+    { n: 6, symbol: "Sf", outcome: "suffocates" as Outcome, label: "Suffocat." },
+    { n: 7, symbol: "Sf", outcome: "suffocates" as Outcome, label: "Suffocat." },
+    { n: 8, symbol: "Sf", outcome: "suffocates" as Outcome, label: "Suffocat." },
+  ]
+
+  return (
+    <div style={{ height: "100%", background: PETRI_BG, display: "flex", flexDirection: "column", fontFamily: MONO }}>
+      {/* Top bar */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 20px", borderBottom: `1px solid ${PETRI_BORDER}`, minHeight: 50 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: PETRI_LIFE }} />
+          <span style={{ fontSize: 9, letterSpacing: "0.3em", color: PETRI_MUTED, textTransform: "uppercase" }}>Step 3</span>
+        </div>
+        <span style={{ fontSize: 9, letterSpacing: "0.2em", color: PETRI_MUTED, textTransform: "uppercase" }}>Skip</span>
+      </div>
+
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: "20px 18px 0", overflow: "hidden" }}>
+        {/* Title */}
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 8, letterSpacing: "0.36em", color: PETRI_MUTED, textTransform: "uppercase", marginBottom: 4 }}>The neighbor rule</div>
+          <div style={{ fontSize: 20, fontWeight: 700, letterSpacing: "0.08em", color: PETRI_INK, textTransform: "uppercase", lineHeight: 1.1 }}>Periodic<br />Table of n</div>
+        </div>
+
+        {/* Element grid — 3-col */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6, marginBottom: 10 }}>
+          {displayCells.map((cell, i) => {
+            const c = color(cell.outcome), b = bg(cell.outcome)
+            const isLife = cell.outcome === "thrives"
+            return (
+              <div key={i} style={{
+                background: b, border: `1.5px solid ${isLife ? c : PETRI_BORDER}`,
+                borderRadius: 8, padding: "8px 10px", position: "relative",
+                boxShadow: isLife ? `0 2px 10px ${PETRI_LIFE}20` : "none",
+              }}>
+                <div style={{ fontSize: 7, letterSpacing: "0.2em", color: c, textTransform: "uppercase", fontWeight: 700, marginBottom: 1 }}>{cell.label}</div>
+                <div style={{ fontSize: 26, fontWeight: 700, color: c, lineHeight: 1 }}>{cell.n}</div>
+                <div style={{ fontSize: 7, letterSpacing: "0.14em", color: PETRI_MUTED, textTransform: "uppercase", marginTop: 2 }}>{cell.symbol}</div>
+              </div>
+            )
+          })}
+          {/* Birth special card — spans full width */}
+          <div style={{
+            background: "#7C3AED0D", border: `1.5px solid ${PETRI_BORN}`,
+            borderRadius: 8, padding: "8px 10px", gridColumn: "span 3",
+            display: "flex", alignItems: "center", gap: 12,
+          }}>
+            <div>
+              <div style={{ fontSize: 7, letterSpacing: "0.2em", color: PETRI_BORN, textTransform: "uppercase", fontWeight: 700 }}>Empty + 3 neighbors</div>
+              <div style={{ fontSize: 18, fontWeight: 700, color: PETRI_BORN, lineHeight: 1.1, marginTop: 1 }}>BIRTH</div>
+            </div>
+            <div style={{ fontSize: 10, color: PETRI_MUTED, letterSpacing: "0.04em", lineHeight: 1.6, flex: 1 }}>
+              A dead cell surrounded by exactly 3 live neighbors comes alive.
+            </div>
+          </div>
+        </div>
+
+        {/* Legend */}
+        <div style={{ display: "flex", gap: 14, justifyContent: "center", paddingBottom: 10 }}>
+          {([["thrives", "Survives"] as const, ["born-rule", "Born"] as const, ["starves", "Dies"] as const]).map(([o, label]) => (
+            <div key={o} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+              <div style={{ width: 7, height: 7, borderRadius: "50%", background: color(o) }} />
+              <span style={{ fontSize: 8, letterSpacing: "0.12em", color: PETRI_MUTED, textTransform: "uppercase" }}>{label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ padding: "12px 18px 20px", borderTop: `1px solid ${PETRI_BORDER}` }}>
+        <div style={{ width: "100%", padding: "16px", background: PETRI_INK, color: PETRI_BG, fontSize: 11, fontWeight: 700, letterSpacing: "0.26em", textTransform: "uppercase", textAlign: "center" }}>
+          Build →
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── "How many neighbors?" — Option B: The Big Number ────────────────────────
+
+function NeighborBigNumberScreen() {
+  const PETRI_BG = "#FAFAF7", PETRI_INK = "#0A0A0A", PETRI_MUTED = "#57534E"
+  const PETRI_BORDER = "#E7E5E0", PETRI_LIFE = "#059669", PETRI_WARN = "#DC2626"
+  const PETRI_BORN = "#7C3AED"
+  const MONO = `ui-monospace, "SF Mono", monospace`
+
+  type Case = { n: string; from: string; outcome: string; word: string; color: string; sub: string }
+  const CASES: Case[] = [
+    { n: "0–1", from: "alive", outcome: "STARVES", word: "dies",  color: PETRI_WARN, sub: "Too few neighbors. Isolation kills." },
+    { n: "2–3", from: "alive", outcome: "THRIVES", word: "lives", color: PETRI_LIFE, sub: "The sweet spot. Cell survives to next gen." },
+    { n: "  3", from: "empty", outcome: "BORN",    word: "born",  color: PETRI_BORN, sub: "Empty space, 3 live neighbors. New life." },
+    { n: "4+",  from: "alive", outcome: "DIES",    word: "dies",  color: PETRI_WARN, sub: "Too many. Overcrowding. Cell suffocates." },
+  ]
+  // For static moodboard — show case index 1 (thrives) as the "active" state
+  const active = CASES[1]
+
+  return (
+    <div style={{ height: "100%", background: PETRI_BG, display: "flex", flexDirection: "column", fontFamily: MONO }}>
+      {/* Top bar */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 20px", borderBottom: `1px solid ${PETRI_BORDER}`, minHeight: 50 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: PETRI_LIFE }} />
+          <span style={{ fontSize: 9, letterSpacing: "0.3em", color: PETRI_MUTED, textTransform: "uppercase" }}>Step 3</span>
+        </div>
+        <span style={{ fontSize: 9, letterSpacing: "0.2em", color: PETRI_MUTED, textTransform: "uppercase" }}>Skip</span>
+      </div>
+
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "16px 28px", gap: 0 }}>
+        {/* From label */}
+        <div style={{ fontSize: 8, letterSpacing: "0.3em", color: PETRI_MUTED, textTransform: "uppercase", marginBottom: 12 }}>
+          {active.from} cell · neighbors =
+        </div>
+
+        {/* Giant n */}
+        <div style={{ fontSize: 100, fontWeight: 700, color: active.color, lineHeight: 1, letterSpacing: "-0.02em", textShadow: `0 0 60px ${active.color}30` }}>
+          {active.n}
+        </div>
+
+        {/* Divider */}
+        <div style={{ width: 40, height: 1.5, background: active.color, margin: "18px 0", opacity: 0.4 }} />
+
+        {/* Outcome word */}
+        <div style={{ fontSize: 36, fontWeight: 700, letterSpacing: "0.18em", color: active.color, textTransform: "uppercase", marginBottom: 10 }}>
+          {active.outcome}
+        </div>
+
+        {/* Sub-copy */}
+        <div style={{ fontSize: 12, color: PETRI_MUTED, letterSpacing: "0.06em", lineHeight: 1.7, textAlign: "center", maxWidth: 220 }}>
+          {active.sub}
+        </div>
+
+        {/* Progress pips */}
+        <div style={{ display: "flex", gap: 7, marginTop: 28 }}>
+          {CASES.map((c, i) => (
+            <div key={i} style={{
+              width: i === 1 ? 22 : 7, height: 7, borderRadius: 4,
+              background: i === 1 ? active.color : PETRI_BORDER,
+              transition: "all 0.3s",
+            }} />
+          ))}
+        </div>
+      </div>
+
+      {/* Mini rule strip at bottom */}
+      <div style={{ borderTop: `1px solid ${PETRI_BORDER}`, display: "flex" }}>
+        {CASES.map((c, i) => (
+          <div key={i} style={{
+            flex: 1, padding: "8px 4px", textAlign: "center",
+            borderRight: i < CASES.length - 1 ? `1px solid ${PETRI_BORDER}` : "none",
+            background: i === 1 ? `${c.color}08` : "transparent",
+          }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: i === 1 ? c.color : PETRI_BORDER }}>{c.n}</div>
+            <div style={{ fontSize: 7, letterSpacing: "0.1em", color: i === 1 ? c.color : PETRI_MUTED, textTransform: "uppercase", marginTop: 1, opacity: i === 1 ? 1 : 0.5 }}>{c.word}</div>
+          </div>
+        ))}
+      </div>
+
+      <div style={{ padding: "12px 18px 20px" }}>
+        <div style={{ width: "100%", padding: "16px", background: PETRI_INK, color: PETRI_BG, fontSize: 11, fontWeight: 700, letterSpacing: "0.26em", textTransform: "uppercase", textAlign: "center" }}>
+          Build →
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ─── "How many neighbors?" — Option C: Spectrum Bar ──────────────────────────
+
+function NeighborSpectrumScreen() {
+  const PETRI_BG = "#FAFAF7", PETRI_INK = "#0A0A0A", PETRI_MUTED = "#57534E"
+  const PETRI_BORDER = "#E7E5E0", PETRI_LIFE = "#059669", PETRI_WARN = "#DC2626"
+  const PETRI_BORN = "#7C3AED"
+  const MONO = `ui-monospace, "SF Mono", monospace`
+
+  return (
+    <div style={{ height: "100%", background: PETRI_BG, display: "flex", flexDirection: "column", fontFamily: MONO }}>
+      <style>{`
+        @keyframes bar3-glow {
+          0%,100% { box-shadow: inset 0 0 0 0 rgba(5,150,105,0), background-color: rgba(5,150,105,0.18); }
+          50%      { box-shadow: inset 0 0 14px 2px rgba(5,150,105,0.28), background-color: rgba(5,150,105,0.30); }
+        }
+        @keyframes bar3-num {
+          0%,100% { transform: scale(1); }
+          50%      { transform: scale(1.18); }
+        }
+        @keyframes birth-ripple {
+          0%   { transform: scale(1);   opacity: 0.55; }
+          100% { transform: scale(3.2); opacity: 0; }
+        }
+        @keyframes birth-circle-pulse {
+          0%,100% { box-shadow: 0 0 0 0 rgba(124,58,237,0.3); }
+          60%      { box-shadow: 0 0 0 8px rgba(124,58,237,0); }
+        }
+      `}</style>
+
+      {/* Top bar */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 20px", borderBottom: `1px solid ${PETRI_BORDER}`, minHeight: 50 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <div style={{ width: 6, height: 6, borderRadius: "50%", background: PETRI_LIFE }} />
+          <span style={{ fontSize: 9, letterSpacing: "0.3em", color: PETRI_MUTED, textTransform: "uppercase" }}>Step 3</span>
+        </div>
+        <span style={{ fontSize: 9, letterSpacing: "0.2em", color: PETRI_MUTED, textTransform: "uppercase" }}>Skip</span>
+      </div>
+
+      <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: "22px 22px 0", minHeight: 0 }}>
+        {/* Heading */}
+        <div style={{ marginBottom: 24 }}>
+          <div style={{ fontSize: 8, letterSpacing: "0.36em", color: PETRI_MUTED, textTransform: "uppercase", marginBottom: 4 }}>The sweet spot</div>
+          <div style={{ fontSize: 22, fontWeight: 700, letterSpacing: "0.08em", color: PETRI_INK, textTransform: "uppercase", lineHeight: 1.1 }}>How many<br />neighbors?</div>
+        </div>
+
+        {/* Spectrum instrument */}
+        <div style={{ marginBottom: 8 }}>
+          {/* Zone labels above */}
+          <div style={{ display: "flex", marginBottom: 6, fontSize: 7.5, letterSpacing: "0.16em", textTransform: "uppercase", fontWeight: 700 }}>
+            <div style={{ flex: 2, color: PETRI_WARN, opacity: 0.7 }}>Starves</div>
+            <div style={{ flex: 2, color: PETRI_LIFE, textAlign: "center" }}>Thrives</div>
+            <div style={{ flex: 5, color: PETRI_WARN, opacity: 0.7, textAlign: "right" }}>Suffocates</div>
+          </div>
+
+          {/* The bar */}
+          <div style={{ position: "relative", height: 44, display: "flex", borderRadius: 6, overflow: "hidden", border: `1px solid ${PETRI_BORDER}` }}>
+            {/* 0 */}
+            <div style={{ flex: 1, background: `${PETRI_WARN}18`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: PETRI_WARN, opacity: 0.5 }}>0</span>
+            </div>
+            {/* 1 */}
+            <div style={{ flex: 1, background: `${PETRI_WARN}12`, display: "flex", alignItems: "center", justifyContent: "center", borderLeft: `1px solid ${PETRI_BORDER}` }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: PETRI_WARN, opacity: 0.5 }}>1</span>
+            </div>
+            {/* 2 — life zone */}
+            <div style={{ flex: 1, background: `${PETRI_LIFE}18`, display: "flex", alignItems: "center", justifyContent: "center", borderLeft: `2px solid ${PETRI_LIFE}40` }}>
+              <span style={{ fontSize: 15, fontWeight: 700, color: PETRI_LIFE }}>2</span>
+            </div>
+            {/* 3 — life zone + birth, animated */}
+            <div style={{
+              flex: 1, display: "flex", alignItems: "center", justifyContent: "center",
+              borderRight: `2px solid ${PETRI_LIFE}60`,
+              animation: "bar3-glow 1.8s ease-in-out infinite",
+              position: "relative",
+            }}>
+              {/* tiny born indicator dot */}
+              <div style={{
+                position: "absolute", top: 5, right: 5,
+                width: 5, height: 5, borderRadius: "50%",
+                background: PETRI_BORN,
+                boxShadow: `0 0 4px ${PETRI_BORN}`,
+              }} />
+              <span style={{
+                fontSize: 18, fontWeight: 700, color: PETRI_LIFE,
+                animation: "bar3-num 1.8s ease-in-out infinite",
+                display: "inline-block",
+              }}>3</span>
+            </div>
+            {/* 4–8 */}
+            {[4,5,6,7,8].map((n) => (
+              <div key={n} style={{ flex: 1, background: `${PETRI_WARN}${n > 5 ? "10" : "15"}`, display: "flex", alignItems: "center", justifyContent: "center", borderLeft: `1px solid ${PETRI_BORDER}` }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: PETRI_WARN, opacity: Math.max(0.25, 0.55 - (n-4) * 0.07) }}>{n}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Range labels below bar */}
+          <div style={{ display: "flex", marginTop: 5, fontSize: 7, letterSpacing: "0.1em", color: PETRI_MUTED, textTransform: "uppercase" }}>
+            <div style={{ flex: 2 }}>0 – 1</div>
+            <div style={{ flex: 2, textAlign: "center", color: PETRI_LIFE, fontWeight: 700 }}>2 – 3</div>
+            <div style={{ flex: 5, textAlign: "right" }}>4 – 8</div>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div style={{ height: 1, background: PETRI_BORDER, margin: "16px 0" }} />
+
+        {/* Birth rule — special callout with ripple animation */}
+        <div style={{ border: `1.5px solid ${PETRI_BORN}40`, borderRadius: 10, padding: "14px 16px", background: "#7C3AED08", marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            {/* Animated birth circle */}
+            <div style={{ position: "relative", width: 36, height: 36, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {/* ripple 1 */}
+              <div style={{
+                position: "absolute", inset: 0, borderRadius: "50%",
+                background: PETRI_BORN,
+                animation: "birth-ripple 2s ease-out infinite",
+              }} />
+              {/* ripple 2 — offset */}
+              <div style={{
+                position: "absolute", inset: 0, borderRadius: "50%",
+                background: PETRI_BORN,
+                animation: "birth-ripple 2s ease-out 0.7s infinite",
+              }} />
+              {/* core circle */}
+              <div style={{
+                position: "relative", width: 30, height: 30, borderRadius: "50%",
+                background: `${PETRI_BORN}18`, border: `1.5px solid ${PETRI_BORN}`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                animation: "birth-circle-pulse 2s ease-out infinite",
+              }}>
+                <span style={{ fontSize: 15, fontWeight: 700, color: PETRI_BORN }}>3</span>
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: 9, letterSpacing: "0.22em", color: PETRI_BORN, textTransform: "uppercase", fontWeight: 700, marginBottom: 3 }}>Birth rule</div>
+              <div style={{ fontSize: 11, color: PETRI_MUTED, letterSpacing: "0.04em", lineHeight: 1.55 }}>
+                An <span style={{ color: PETRI_INK, fontWeight: 700 }}>empty</span> cell with exactly 3 live neighbors comes alive.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Three rule pills */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+          {[
+            { range: "n = 0, 1", label: "Starves — too few neighbors", color: PETRI_WARN },
+            { range: "n = 2, 3", label: "Survives — alive cell persists", color: PETRI_LIFE },
+            { range: "n ≥ 4",   label: "Suffocates — too crowded", color: PETRI_WARN },
+          ].map(r => (
+            <div key={r.range} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              <div style={{ width: 38, textAlign: "center", fontSize: 9, fontWeight: 700, color: r.color, letterSpacing: "0.05em", flexShrink: 0 }}>{r.range}</div>
+              <div style={{ width: 1, height: 18, background: PETRI_BORDER, flexShrink: 0 }} />
+              <div style={{ fontSize: 9, color: PETRI_MUTED, letterSpacing: "0.06em" }}>{r.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ padding: "16px 22px 20px", borderTop: `1px solid ${PETRI_BORDER}`, marginTop: 16 }}>
+        <div style={{ width: "100%", padding: "16px", background: PETRI_INK, color: PETRI_BG, fontSize: 11, fontWeight: 700, letterSpacing: "0.26em", textTransform: "uppercase", textAlign: "center" }}>
+          Build →
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── Color chips ──────────────────────────────────────────────────────────────
 
 function Chips({ colors }: { colors: { color: string; label: string }[] }) {
@@ -1000,6 +1367,48 @@ export default function MoodboardPage() {
           <Chips colors={[{color:"#F7F4EE",label:"rice paper"},{color:"#2A201A",label:"ink"},{color:"#7A6A60",label:"muted"},{color:"#D8D0C4",label:"border"}]} />
         </div>
 
+      </div>
+
+      {/* ── "How many neighbors?" explorations ── */}
+      <div style={{ maxWidth: 1100, margin: "80px auto 0 " }}>
+        <div style={{ paddingBottom: 32, borderBottom: "1px solid #333", marginBottom: 48 }}>
+          <div style={{ fontSize: 9, letterSpacing: "0.3em", color: "#666", textTransform: "uppercase", marginBottom: 10 }}>PETRI — Onboarding screen explorations</div>
+          <div style={{ fontSize: 26, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase", color: "#fff", marginBottom: 10 }}>«How many neighbors?» — 3 directions</div>
+          <div style={{ fontSize: 10, letterSpacing: "0.1em", color: "#777", lineHeight: 1.7, maxWidth: 480 }}>
+            The current rules screen is too generic. Three redesign proposals — same content, completely different treatment. Pick one to ship.
+          </div>
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 48, justifyItems: "center" }}>
+
+          {/* A — Periodic Table */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
+            <PhoneFrame bg="#FAFAF7" label="A — Periodic Table">
+              <NeighborPeriodicScreen />
+            </PhoneFrame>
+            <StyleLabel name="A · Periodic Table" desc="Each neighbor count is an element card. Scientific / chemistry aesthetic. Scannable at a glance — you see all 9 cases at once." />
+            <Chips colors={[{color:"#059669",label:"thrives"},{color:"#7C3AED",label:"born"},{color:"#DC2626",label:"dies"},{color:"#FAFAF7",label:"bg"}]} />
+          </div>
+
+          {/* B — Big Number */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
+            <PhoneFrame bg="#FAFAF7" label="B — Big Number">
+              <NeighborBigNumberScreen />
+            </PhoneFrame>
+            <StyleLabel name="B · The Big Number" desc="One case at a time. Giant n fills the screen. Tap to advance through all 4 rules. Dramatic, editorial, matches Count screen rhythm." />
+            <Chips colors={[{color:"#059669",label:"thrives"},{color:"#7C3AED",label:"born"},{color:"#DC2626",label:"dies"},{color:"#E7E5E0",label:"inactive"}]} />
+          </div>
+
+          {/* C — Spectrum Bar */}
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
+            <PhoneFrame bg="#FAFAF7" label="C — Spectrum Bar">
+              <NeighborSpectrumScreen />
+            </PhoneFrame>
+            <StyleLabel name="C · Spectrum Bar" desc="The 0–8 range as a scientific instrument readout. Dead zones in muted red, life zone glowing green. Birth rule gets its own callout." />
+            <Chips colors={[{color:"#059669",label:"life zone"},{color:"#7C3AED",label:"birth"},{color:"#DC2626",label:"dead zones"},{color:"#E7E5E0",label:"bar"}]} />
+          </div>
+
+        </div>
       </div>
 
       {/* Footer note */}
