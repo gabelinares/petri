@@ -1,56 +1,27 @@
 'use client'
 
-import { useEffect, Suspense } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 import posthog from 'posthog-js'
-import { PostHogProvider as PHProvider, usePostHog } from 'posthog-js/react'
+import { PostHogProvider as PHProvider } from 'posthog-js/react'
 
-function PostHogPageView() {
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const ph = usePostHog()
-
-  useEffect(() => {
-    if (!pathname || !ph) return
-
-    let url = window.origin + pathname
-    const search = searchParams?.toString()
-    if (search) {
-      url += '?' + search
-    }
-
-    ph.capture('$pageview', { $current_url: url })
-  }, [pathname, searchParams, ph])
-
-  return null
-}
-
-function SuspendedPostHogPageView() {
-  return (
-    <Suspense fallback={null}>
-      <PostHogPageView />
-    </Suspense>
-  )
-}
+// PostHog project API keys are public/client-side by design. The env var lets
+// deployments override it; this default keeps analytics working out of the box.
+const POSTHOG_KEY =
+  process.env.NEXT_PUBLIC_POSTHOG_KEY ?? 'phc_ogyD4RnGhCtk6cNFN4XUVDrG9NdEFWi6AJ6SSgSubT8e'
+const POSTHOG_HOST = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com'
 
 export function PostHogProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    const key = process.env.NEXT_PUBLIC_POSTHOG_KEY
-    if (!key) return
+    if (!POSTHOG_KEY) return
 
-    posthog.init(key, {
-      api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com',
-      // We capture pageviews manually below so we can track App Router navigations.
-      capture_pageview: false,
-      capture_pageleave: true,
-      person_profiles: 'identified_only',
+    posthog.init(POSTHOG_KEY, {
+      api_host: POSTHOG_HOST,
+      // The 2026-05-30 defaults enable SPA pageview + pageleave capture and
+      // other recommended settings, so no manual $pageview tracking is needed.
+      defaults: '2026-05-30',
+      person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
     })
   }, [])
 
-  return (
-    <PHProvider client={posthog}>
-      <SuspendedPostHogPageView />
-      {children}
-    </PHProvider>
-  )
+  return <PHProvider client={posthog}>{children}</PHProvider>
 }
