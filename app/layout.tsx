@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { PostHogProvider } from './providers'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
@@ -37,8 +38,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="font-sans antialiased" suppressHydrationWarning>
-        {children}
-        {process.env.NODE_ENV === 'production' && <Analytics />}
+        <PostHogProvider>
+          {children}
+          {process.env.NODE_ENV === 'production' && <Analytics />}
+        </PostHogProvider>
       </body>
     </html>
   )
